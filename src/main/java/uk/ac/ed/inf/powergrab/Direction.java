@@ -18,14 +18,13 @@ enum Direction {
 		WNW(13),
 		NW(14),
 		NNW(15);
-	
-	private final Double angle;
-	
-	private Direction(int angle) {
+
+		final double angle;
+
+	Direction (double angle) {
 		this.angle = angle * Math.PI/8;
 	}
-	
-	
+
 		
 }	
 	 
