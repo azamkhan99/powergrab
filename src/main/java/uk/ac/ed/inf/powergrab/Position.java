@@ -3,6 +3,7 @@ package uk.ac.ed.inf.powergrab;
 public class Position {
 	public double latitude;
 	public double longitude;
+	public final double distance = 0.0003;
 
 
 	public Position(double latitude, double longitude) {
@@ -12,7 +13,7 @@ public class Position {
 
 	public Position nextPosition(Direction direction) {
 	    Position pos;
-        pos = new Position(this.latitude + 0.0003*(Math.cos(direction.angle)), this.longitude + 0.0003*(Math.sin(direction.angle)));
+        pos = new Position(this.latitude + distance*(Math.cos(direction.angle)), this.longitude + distance*(Math.sin(direction.angle)));
         return pos;
 	}
 	
