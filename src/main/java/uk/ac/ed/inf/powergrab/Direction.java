@@ -1,7 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
 
-enum Direction {
+public enum Direction {
 		N(0),
 		NNE(1),
 		NE(2),
@@ -19,7 +19,7 @@ enum Direction {
 		NW(14),
 		NNW(15);
 
-		final double angle;
+	public final double angle;
 
 	Direction (double angle) {
 		this.angle = angle * Math.PI/8;

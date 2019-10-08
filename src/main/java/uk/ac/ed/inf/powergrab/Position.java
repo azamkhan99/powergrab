@@ -17,7 +17,7 @@ public class Position {
 	}
 	
 	public boolean inPlayArea() {
-
+		//A check to see if the drone is in the legal playing area
 		boolean horizontal = (this.latitude > 55.942617) && (this.latitude < 55.946233);
 		boolean vertical = (this.longitude > -3.19247) && (this.longitude < -3.184319);
 		
