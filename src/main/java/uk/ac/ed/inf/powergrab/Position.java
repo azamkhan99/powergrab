@@ -5,7 +5,6 @@ public class Position {
 	public double longitude;
 	public final double distance = 0.0003;
 
-
 	public Position(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
