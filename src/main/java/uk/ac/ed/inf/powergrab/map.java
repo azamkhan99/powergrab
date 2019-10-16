@@ -14,6 +14,11 @@ static String mapDate = "2019/01/01";
 			throws IOException {
 		URL mapUrl = new URL("http://homepages.inf.ed.ac.uk/stg/powergrab/" + mapDate + "/powergrabmap.geojson");
 		HttpURLConnection httpConn = (HttpURLConnection) mapUrl.openConnection();
+		httpConn.setReadTimeout(10000);
+		httpConn.setConnectTimeout(15000);
+		httpConn.setRequestMethod("GET");
+		httpConn.setDoInput(true);
+		httpConn.connect();
 		int responseCode = httpConn.getResponseCode();
 		InputStream is = httpConn.getInputStream();
 		
