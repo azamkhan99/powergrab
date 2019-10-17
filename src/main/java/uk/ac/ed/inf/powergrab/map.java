@@ -1,16 +1,24 @@
 package uk.ac.ed.inf.powergrab;
 
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
+
 import java.net.*;
-import java.net.URL;
-import java.net.URLConnection;
+
+
+
 
 public class map {
 	
-static String mapDate = "2019/01/01";
+static String md = "2019/01/01";
 
-	public static void downloadMap(String fileURL, String saveDir)
+	static String convertStreamToString(java.io.InputStream is) {
+		java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+		return s.hasNext() ? s.next() : "";
+	}
+
+
+	public static void downloadMap(String mapDate)
 			throws IOException {
 		URL mapUrl = new URL("http://homepages.inf.ed.ac.uk/stg/powergrab/" + mapDate + "/powergrabmap.geojson");
 		HttpURLConnection httpConn = (HttpURLConnection) mapUrl.openConnection();
@@ -19,9 +27,13 @@ static String mapDate = "2019/01/01";
 		httpConn.setRequestMethod("GET");
 		httpConn.setDoInput(true);
 		httpConn.connect();
-		int responseCode = httpConn.getResponseCode();
 		InputStream is = httpConn.getInputStream();
-		
+		String mapSource = convertStreamToString(is);
+		System.out.println(mapSource);
 	}
+
+
+
+
 }
 	
