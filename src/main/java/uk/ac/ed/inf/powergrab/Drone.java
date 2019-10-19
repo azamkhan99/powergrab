@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Drone {
 
-    float coins;
+    int coins;
     int moves;
     double power;
     Position current;
@@ -21,10 +21,13 @@ public class Drone {
     }
 
     public void movement(Direction direction) {
+
         this.moves -= 1;
         this.power -= 1.25;
         this.current = current.nextPosition(direction);
-        System.out.println(this.power);
+        System.out.println("test" + direction);
+
+
     }
 
 }
