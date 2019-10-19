@@ -33,7 +33,7 @@ public class App
         else if (state.equals("stateful")) {
             Stateful d = new Stateful(start, seed);
             d.movement(Direction.N);
-            //lol
+
         }
 
         Map m = new Map();
