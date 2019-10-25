@@ -10,6 +10,10 @@ public class Position {
 		this.longitude = longitude;
 	}
 
+	public String toString() {
+		return String.format("latitude: " + latitude + "	longitude: " + longitude);
+	}
+
 	public Position nextPosition(Direction direction) {
 	    Position pos;
         pos = new Position(this.latitude + distance*(Math.cos(direction.angle)), this.longitude + distance*(Math.sin(direction.angle)));

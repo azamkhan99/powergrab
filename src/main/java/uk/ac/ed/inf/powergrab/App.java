@@ -18,9 +18,10 @@ public class App
         int year = in.nextInt();
         String date = String.format("%d/0%d/%d", year, month, day);
 
-        Map m = new Map();
-        m.downloadMap(date);
-        m.collectingFeatures();
+        Map m = new Map(date);
+       /* for (Stations s : m.stations) {
+            System.out.println(s);
+        }*/
 
         double latitude = in.nextDouble();
         double longitude = in.nextDouble();
@@ -31,10 +32,8 @@ public class App
         String state = in.next();
         if (state.equals("stateless")) {
             Stateless d = new Stateless(start, seed);
-            d.strategy();
-            System.out.println(Map.sml.size());
-            //d.movement(Direction.N);
-            //d.lol();
+           d.callStrategy();
+
         }
         else if (state.equals("stateful")) {
             Stateful d = new Stateful(start, seed);
