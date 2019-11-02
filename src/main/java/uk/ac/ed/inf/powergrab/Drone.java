@@ -17,6 +17,7 @@ public class Drone {
     Random rnd;
     Map map;
     static ArrayList<Point> route = new ArrayList<Point>();
+    static ArrayList<String> lines = new ArrayList<>();
 
 
     public Drone(Position latlong, int seed, Map map){
@@ -81,17 +82,23 @@ public class Drone {
         this.moves -= 1;
         this.power -= 1.25;
 
+        Double initialLatitude = this.currentPosition.latitude;
+        Double initialLongitude = this.currentPosition.longitude;
+
         this.currentPosition = currentPosition.nextPosition(direction);
+
+        String move = initialLatitude + "," + initialLongitude + "," + direction + "," + this.currentPosition.latitude + "," + this.currentPosition.longitude + "," + this.coins + "," + this.power + "\n";
+        lines.add(move);
 
         Point r = Point.fromLngLat(this.currentPosition.longitude, this.currentPosition.latitude);
         route.add((r));
     }
 
-    public void makeLS() {
+    public void makeLS(String mapdate) {
         LineString ls = LineString.fromLngLats(route);
 
         Map.fcs.features().add(Feature.fromGeometry(ls));
-        try (FileWriter file = new FileWriter("path.geojson")) {
+        try (FileWriter file = new FileWriter(mapdate)) {
 
             file.write(Map.fcs.toJson());
             file.flush();
@@ -101,6 +108,18 @@ public class Drone {
         }
     }
 
+    public void maketxtfile(String mapdate) {
+        try (FileWriter writer = new FileWriter(mapdate);) {
+
+            for(String line: lines) {
+                writer.write(line + System.lineSeparator());
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 

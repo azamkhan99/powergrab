@@ -20,6 +20,7 @@ public class App
 
         String date = String.format("%s/%s/%s", year, month, day);
 
+
         Map m = new Map(date);
         double latitude = in.nextDouble();
         double longitude = in.nextDouble();
@@ -28,10 +29,13 @@ public class App
         int seed = in.nextInt();
 
         String state = in.next();
+        String datejson = String.format("%s-%s-%s-%s.geojson", state, day, month, year);
+        String datetxt = String.format("%s-%s-%s-%s.txt", state, day, month, year);
         if (state.equals("stateless")) {
             Stateless d = new Stateless(start, seed, m);
             d.callStrategy();
-            d.makeLS();
+            d.makeLS(datejson);
+            d.maketxtfile(datetxt);
 
 
         }
