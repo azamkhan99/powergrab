@@ -51,15 +51,6 @@ public class Drone {
             return biggest;
     }
 
-    /*public ArrayList<Direction> ChecklegalMoves() {
-        ArrayList<Direction> legalMoves = new ArrayList<>();
-        for (Direction direction: Direction.values()) {
-            if(this.currentPosition.nextPosition(direction).inPlayArea()) {
-                legalMoves.add(direction);
-            }
-        }
-        return legalMoves;
-    }*/
 
     public boolean withinStation (Position position, Stations station) {
         return distance(position, station.location) < 0.00025;
@@ -68,8 +59,10 @@ public class Drone {
 
     public Stations closestStation () {
         Stations nearest = this.map.stations.get(0);
-        for (Stations s : this.map.stations) {
-            if (distance(this.currentPosition, s.location) < distance(this.currentPosition, nearest.location)){
+        for (Stations s : this.map.stations)
+        {
+            if (distance(this.currentPosition, s.location) < distance(this.currentPosition, nearest.location))
+            {
                 nearest=s;
             }
         }
@@ -87,9 +80,16 @@ public class Drone {
 
         this.currentPosition = currentPosition.nextPosition(direction);
 
+        if (withinStation(this.currentPosition, closestStation()))
+        {
+            this.coins += closestStation().coins;
+            this.power += closestStation().power;
+            closestStation().coins = 0;
+            closestStation().power = 0;
+        }
+
         String move = initialLatitude + "," + initialLongitude + "," + direction + "," + this.currentPosition.latitude + "," + this.currentPosition.longitude + "," + this.coins + "," + this.power + "\n";
         lines.add(move);
-
         Point r = Point.fromLngLat(this.currentPosition.longitude, this.currentPosition.latitude);
         route.add((r));
     }
@@ -98,30 +98,31 @@ public class Drone {
         LineString ls = LineString.fromLngLats(route);
 
         Map.fcs.features().add(Feature.fromGeometry(ls));
-        try (FileWriter file = new FileWriter(mapdate)) {
-
+        try (FileWriter file = new FileWriter(mapdate))
+        {
             file.write(Map.fcs.toJson());
             file.flush();
 
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
 
     public void maketxtfile(String mapdate) {
-        try (FileWriter writer = new FileWriter(mapdate);) {
-
-            for(String line: lines) {
+        try (FileWriter writer = new FileWriter(mapdate))
+        {
+            for(String line: lines)
+            {
                 writer.write(line + System.lineSeparator());
             }
             writer.close();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
 
     }
-
-
 
 
 }

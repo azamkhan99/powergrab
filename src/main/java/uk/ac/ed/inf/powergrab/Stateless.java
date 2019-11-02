@@ -29,10 +29,9 @@ public class Stateless extends Drone {
                 }
             }
         }
-        System.out.println(Arrays.toString(coin_array));
+        //System.out.println(Arrays.toString(coin_array));
         return coin_array;
     }
-
 
 
     public int best_gain(double[] coinage) {
@@ -62,26 +61,14 @@ public class Stateless extends Drone {
 
     public void goHere() { //moves in chosen direction
         int d = best_gain(potential_gain());
-        System.out.println("direction chosen: " + Direction.values()[d]);
+        //System.out.println("direction chosen: " + Direction.values()[d]);
         movement(Direction.values()[d]);
-    }
-
-
-    public void coinTransfer() {
-        Stations s = closestStation();
-            if (withinStation(this.currentPosition, s))
-            {
-                this.coins += s.coins;
-                this.power += s.power;
-                s.coins = 0;
-                s.power = 0;
-            }
     }
 
 
     public void strategy() {
         goHere();
-        coinTransfer();
+
     }
 
 
@@ -93,9 +80,8 @@ public class Stateless extends Drone {
 
         } while (this.moves > 0 && this.power > 0);
 
-        System.out.println("\ndrone coins = " + this.coins);
-        System.out.println("drone power = " + this.power);
-        System.out.println("drone moves = " + this.moves);
+        System.out.println("\nDrone coins = " + this.coins);
+        System.out.println("Drone power = " + this.power);
     }
 
 
