@@ -9,6 +9,7 @@ public class Stations {
         this.coins = coins; this.power = power; this.location = location;
     }
 
+
     public String toString() {
         return "coins: " + this.coins + "power: " + this.power + "latitude: " + this.location.latitude + "longitude: " + this.location.longitude;
     }

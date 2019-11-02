@@ -2,6 +2,7 @@ package uk.ac.ed.inf.powergrab;
 
 import com.mapbox.geojson.*;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public class Map {
      public static ArrayList<Stations> stations = new ArrayList<Stations>();
      private String mapSource = "";
+     public static FeatureCollection fcs;
 
     public Map(String mapDate) throws IOException {
         URL mapUrl = new URL("http://homepages.inf.ed.ac.uk/stg/powergrab/" + mapDate + "/powergrabmap.geojson");
@@ -22,7 +24,7 @@ public class Map {
         httpConn.connect();
         InputStream is = httpConn.getInputStream();
         this.mapSource = convertStreamToString(is);
-        FeatureCollection fcs = FeatureCollection.fromJson(mapSource);
+        this.fcs = FeatureCollection.fromJson(mapSource);
         add2map(fcs);
 
     }
@@ -41,9 +43,6 @@ public class Map {
     }
 
 
-
-
-
     public void add2map(FeatureCollection fcs){
         for (Feature f : fcs.features()) {
             double coins = f.getProperty("coins").getAsDouble();
@@ -54,6 +53,8 @@ public class Map {
         }
 
     }
+
+
 
 
 

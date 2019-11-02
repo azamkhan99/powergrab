@@ -1,64 +1,107 @@
 package uk.ac.ed.inf.powergrab;
 
-import java.awt.*;
+import java.util.*;
 
 public class Stateless extends Drone {
 
 
-    public Stateless(Position latlong, int seed) {
-        super(latlong, seed);
-        //System.out.println("drone is stateless");
+    public Stateless(Position latlong, int seed, Map map) {
+        super(latlong, seed, map);
     }
 
-    public double distance(Position position, Position location) {
-        double x1 = position.latitude;
-        double y1 = position.longitude;
-        double x2 = location.latitude;
-        double y2 = location.longitude;
-        double d = Math.sqrt(Math.pow((x1-x2),2) + Math.pow((y1-y2),2));
-        return d;
-    }
 
-    public void strategy() {
-        for (Direction direction: Direction.values()){
+    public double[] potential_gain(){
+
+        double[] coin_array = new double[16];
+
+        for (Direction direction : Direction.values())
+        {
             Position p1 = this.currentPosition.nextPosition(direction);
-            for (Stations s : Map.stations) {
-                if (distance(p1, s.location) <= 0.00025) {
-                    coin_check(direction, s);
-
+            for (Stations s : this.map.stations)
+            {
+                if (!p1.inPlayArea())
+                {
+                    coin_array[direction.ordinal()] = Double.NEGATIVE_INFINITY;
                 }
-                else if (distance(p1, s.location) > 0.00025) {
-                    movement(Direction.values()[rnd.nextInt(Direction.values().length)]);
-                    coin_check(direction, s);
+                else if (withinStation(p1, s))
+                {
+                    coin_array[direction.ordinal()] = s.coins;
                 }
             }
-
         }
+        System.out.println(Arrays.toString(coin_array));
+        return coin_array;
     }
 
-    private void coin_check(Direction direction, Stations s) {
-        if (s.coins > 0) {
 
-            System.out.println("initial: " + this.currentPosition.toString());
-            movement(direction);
-            this.coins += s.coins;
-            this.power += s.power;
-            s.power = 0;
-            s.coins = 0;
-            System.out.println("after method call: " + this.currentPosition.toString());
-            System.out.println("drone coins = " + this.coins);
-            System.out.println("drone power = " + this.power);
-            System.out.println(direction);
-            System.out.println("station coins = " + s.coins);
 
+    public int best_gain(double[] coinage) {
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0;i < coinage.length;i++)
+        {
+            if (coinage[i] == 0.0)
+            {
+                indices.add(i);
+            }
         }
+        int dirInd;
+
+            if (Arrays.stream(coinage).max().getAsDouble() < 0.0)
+            {
+                dirInd = maxIndex(coinage);
+            }
+            else if (Arrays.stream(coinage).max().getAsDouble() == 0.0)
+            {
+                int randInd = rnd.nextInt(indices.size());
+                dirInd = indices.get(randInd);
+            }
+            else dirInd = maxIndex(coinage);
+
+        return dirInd;
     }
+
+    public void goHere() { //moves in chosen direction
+        int d = best_gain(potential_gain());
+        System.out.println("direction chosen: " + Direction.values()[d]);
+        movement(Direction.values()[d]);
+    }
+
+
+    public void coinTransfer() {
+        Stations s = closestStation();
+            if (withinStation(this.currentPosition, s))
+            {
+                this.coins += s.coins;
+                this.power += s.power;
+                s.coins = 0;
+                s.power = 0;
+            }
+    }
+
+
+    public void strategy() {
+        goHere();
+        coinTransfer();
+    }
+
 
     public void callStrategy() {
-        while (this.moves > 0 || this.power > 0) {
+
+        do {
+            System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
             strategy();
-        }
+
+        } while (this.moves > 0 && this.power > 0);
+
+        System.out.println("\ndrone coins = " + this.coins);
+        System.out.println("drone power = " + this.power);
+        System.out.println("drone moves = " + this.moves);
     }
+
 
 
 }
+
+
+
+

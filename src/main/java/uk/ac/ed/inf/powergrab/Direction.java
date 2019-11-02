@@ -25,8 +25,9 @@ public enum Direction {
 		this.angle = angle * Math.PI/8;
 	}
 
-		
-}	
+
+
+}
 	 
 	
 	
