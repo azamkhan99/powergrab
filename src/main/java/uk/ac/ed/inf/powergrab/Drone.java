@@ -41,14 +41,16 @@ public class Drone {
     }
 
     public int maxIndex(double[] arr){
-
-        if ( arr == null || arr.length == 0 ) return -1; // null or empty
-            int biggest = 0;
-            for (int i = 1;i < arr.length;i++)
-            {
-                if (arr[i] > arr[biggest]) biggest = i;
-            }
-            return biggest;
+        if ( arr == null || arr.length == 0 )
+        {
+            return -1;
+        } // null or empty
+        int biggest = 0;
+        for (int i = 1;i < arr.length;i++)
+        {
+            if (arr[i] > arr[biggest]) biggest = i;
+        }
+        return biggest;
     }
 
 
@@ -63,7 +65,7 @@ public class Drone {
         {
             if (distance(this.currentPosition, s.location) < distance(this.currentPosition, nearest.location))
             {
-                nearest=s;
+                nearest = s;
             }
         }
         return nearest;
@@ -71,10 +73,8 @@ public class Drone {
 
 
     public void movement(Direction direction) {
-
         this.moves -= 1;
         this.power -= 1.25;
-
         Double initialLatitude = this.currentPosition.latitude;
         Double initialLongitude = this.currentPosition.longitude;
 
@@ -94,7 +94,11 @@ public class Drone {
         route.add((r));
     }
 
-    public void makeLS(String mapdate) {
+
+
+
+
+    public void makejsonfile(String mapdate) {
         LineString ls = LineString.fromLngLats(route);
 
         Map.fcs.features().add(Feature.fromGeometry(ls));

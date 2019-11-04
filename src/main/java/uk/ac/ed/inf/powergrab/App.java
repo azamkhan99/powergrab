@@ -11,7 +11,6 @@ import java.util.*;
 public class App
 {
 
-//static int lol = 0;
     public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
         String day = in.next();
@@ -34,7 +33,7 @@ public class App
         if (state.equals("stateless")) {
             Stateless d = new Stateless(start, seed, m);
             d.callStrategy();
-            d.makeLS(datejson);
+            d.makejsonfile(datejson);
             d.maketxtfile(datetxt);
 
 

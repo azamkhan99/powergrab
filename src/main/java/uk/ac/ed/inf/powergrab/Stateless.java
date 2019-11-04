@@ -68,7 +68,6 @@ public class Stateless extends Drone {
 
     public void strategy() {
         goHere();
-
     }
 
 
