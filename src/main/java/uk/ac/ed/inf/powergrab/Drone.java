@@ -19,6 +19,18 @@ public class Drone {
     static ArrayList<Point> route = new ArrayList<Point>();
     static ArrayList<String> lines = new ArrayList<>();
 
+    public double totalCoins() {
+        ArrayList<Double> coinList = new ArrayList<>();
+        double sum = 0;
+        for (Stations s : this.map.stations){
+            if (s.coins > 0) {
+                sum += s.coins;
+            }
+        }
+        System.out.println("\nlol: "+ sum + "\n");
+        return sum;
+    }
+
 
     public Drone(Position latlong, int seed, Map map){
         this.currentPosition = latlong;
@@ -69,6 +81,16 @@ public class Drone {
             }
         }
         return nearest;
+    }
+
+    public ArrayList<Direction> ChecklegalMoves() {
+        ArrayList<Direction> legalMoves = new ArrayList<>();
+        for (Direction direction: Direction.values()) {
+            if(this.currentPosition.nextPosition(direction).inPlayArea()) {
+                legalMoves.add(direction);
+            }
+        }
+        return legalMoves;
     }
 
 

@@ -54,7 +54,15 @@ public class Map {
 
     }
 
-
+    public double totalCoins() {
+        double sum = 0;
+        for (Stations s : stations){
+            if (s.coins > 0) {
+                sum += s.coins;
+            }
+        }
+        return sum;
+    }
 
 
 

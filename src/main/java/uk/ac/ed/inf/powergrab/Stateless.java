@@ -61,7 +61,7 @@ public class Stateless extends Drone {
 
     public void goHere() { //moves in chosen direction
         int d = best_gain(potential_gain());
-        //System.out.println("direction chosen: " + Direction.values()[d]);
+        System.out.println("direction chosen: " + Direction.values()[d]);
         movement(Direction.values()[d]);
     }
 

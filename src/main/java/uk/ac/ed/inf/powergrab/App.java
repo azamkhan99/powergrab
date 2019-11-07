@@ -1,7 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -37,9 +36,14 @@ public class App
             d.maketxtfile(datetxt);
 
 
+
         }
         else if (state.equals("stateful")) {
+
             Stateful d = new Stateful(start, seed, m);
+            d.StrategyCall();
+            d.maketxtfile(datetxt);
+            d.makejsonfile(datejson);
 
         }
 
