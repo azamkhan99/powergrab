@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
+
+
 public class Position {
 	public double latitude;
 	public double longitude;
@@ -27,4 +29,9 @@ public class Position {
 		
 		return horizontal && vertical;
 		}
+
+	public boolean isEquals(Position p) {
+		return this.latitude == p.latitude & this.longitude == p.longitude;
+	}
+
 	}

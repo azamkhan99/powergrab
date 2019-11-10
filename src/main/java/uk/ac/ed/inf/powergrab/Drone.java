@@ -18,6 +18,7 @@ public class Drone {
     Map map;
     static ArrayList<Point> route = new ArrayList<Point>();
     static ArrayList<String> lines = new ArrayList<>();
+    static ArrayList<Position> posList = new ArrayList<>();
 
     public double totalCoins() {
         ArrayList<Double> coinList = new ArrayList<>();
@@ -65,6 +66,19 @@ public class Drone {
         return biggest;
     }
 
+    public int minIndex(double[] arr){
+        if ( arr == null || arr.length == 0 )
+        {
+            return -1;
+        } // null or empty
+        int biggest = 0;
+        for (int i = 1;i < arr.length;i++)
+        {
+            if (arr[i] < arr[biggest]) biggest = i;
+        }
+        return biggest;
+    }
+
 
     public boolean withinStation (Position position, Stations station) {
         return distance(position, station.location) < 0.00025;
@@ -101,6 +115,10 @@ public class Drone {
         Double initialLongitude = this.currentPosition.longitude;
 
         this.currentPosition = currentPosition.nextPosition(direction);
+        //Position newPosition = this.currentPosition;
+        posList.add(this.currentPosition);
+        //System.out.println(posList.toString());
+
 
         if (withinStation(this.currentPosition, closestStation()))
         {

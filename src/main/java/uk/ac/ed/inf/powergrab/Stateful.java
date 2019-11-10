@@ -10,8 +10,6 @@ public class Stateful extends Drone {
         super(latlong, seed, map );
     }
 
-
-
     public ArrayList<Stations> stationPos() {
         ArrayList<Stations> positiveList = new ArrayList<>();
         for (Stations s : this.map.stations){
@@ -19,7 +17,7 @@ public class Stateful extends Drone {
                 positiveList.add(s);
             }
         }
-        //System.out.println("list size = " + positiveList.size() + " " + positiveList.toString());
+        //System.out.println("list size = " + positiveList.size()+ " " + positiveList.toString());
         return positiveList;
     }
 
@@ -36,12 +34,12 @@ public class Stateful extends Drone {
     }
 
 
-    public Stations closest (ArrayList<Stations> ls) {
+    public Stations closest (Position p, ArrayList<Stations> ls) {
         if (ls.isEmpty()) return null;
         Stations nearest = ls.get(0);
         for (Stations s : ls)
         {
-            if (distance(this.currentPosition, s.location) < distance(this.currentPosition, nearest.location))
+            if (distance(p, s.location) < distance(p, nearest.location))
             {
                 nearest = s;
             }
@@ -113,56 +111,93 @@ public class Stateful extends Drone {
         return dirInd;
     }
 
+    public double[] reroute () {
+        double[] dists = new double[16];
+        double dist;
+        for (Direction d : Direction.values()) {
+            Position p1 = this.currentPosition.nextPosition(d);
+            dist = distance(p1, closest(p1, stationPos()).location);
+            dists[d.ordinal()] = dist;
+            for (Stations s : stationNeg()) {
+                if (!p1.inPlayArea() || withinStation(p1, s)) {
+                    dist = Double.POSITIVE_INFINITY;
+                    dists[d.ordinal()] = dist;}
+                //else if (withinStation(p1, s)) {dists[d.ordinal()] = 1000; }
+                //else if (!withinStation(p1, s)){
+            }
 
+        }
+        System.out.println(Arrays.toString(dists));
+        return dists;
+    }
+
+
+
+
+    public  void moveRandom() {
+        int d = avoid(potential_loss());
+        movement(Direction.values()[d]);
+
+    }
 
     public void moveToAvoid() {
-        int d = avoid(potential_loss());
+        int d = minIndex(reroute());
         movement(Direction.values()[d]);
     }
 
 
-    /*public void movetowards(Direction d) {
-        if (this.currentPosition.nextPosition(d).inPlayArea()
-                && (!withinStation(this.currentPosition.nextPosition(d), closest(stationNeg()))))
-            movement(d);
-        else moveToAvoid();
-    }*/
 
+
+    public boolean is_Stuck() {
+        if (posList.size() >= 3)
+        return (posList.get(posList.size()-1).isEquals(posList.get(posList.size()-3)));
+        else return false;
+
+    }
+
+
+    //if equal to second last position, choose new direction.
 
     public void movetowards(Direction d) {
-            if (this.currentPosition.nextPosition(d).inPlayArea()
+            if (this.currentPosition.nextPosition(d).inPlayArea() && !is_Stuck()
             && (!withinNeg(d))) {
                 movement(d);
             }
+
+            else if (is_Stuck()) {moveRandom();}
+
             else {
                 moveToAvoid();
             }
     }
 
 
-    public void removeStation(ArrayList<Stations> ls) { ls.removeIf(stations -> stations.coins == 0); }
 
+
+
+
+
+    public void removeStation(ArrayList<Stations> ls) { ls.removeIf(stations -> stations.coins == 0); }
 
     public void strategy() {
         //System.out.println(this.currentPosition.toString());
-        if (closest(stationPos()) == null) { moveToAvoid();} else {
-            movetowards(getDirection(closest(stationPos())));
+        if (closest(this.currentPosition,stationPos()) == null) { moveRandom();} else {
+            movetowards(getDirection(closest(this.currentPosition,stationPos())));
             removeStation(stationPos());}
         //System.out.println(this.currentPosition.toString());
     }
 
-
     public void StrategyCall() {
         double tc = map.totalCoins();
         do {
-            //System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
+            System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
             strategy();
 
         } while (this.moves > 0 && this.power > 0);
-        double perc = Math.round(this.coins/tc *100);
+        double perc = (this.coins/tc *100);
         System.out.println("\ntotal coins= " + tc + "\n" + "percent of coins collected: " +perc);
 
-        //System.out.println("\nDrone coins = " + this.coins);
+        System.out.println("\nDrone coins = " + this.coins);
         //System.out.println("Drone power = " + this.power);
 
     }
