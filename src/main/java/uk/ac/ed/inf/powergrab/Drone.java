@@ -122,10 +122,20 @@ public class Drone {
 
         if (withinStation(this.currentPosition, closestStation()))
         {
+
             this.coins += closestStation().coins;
             this.power += closestStation().power;
             closestStation().coins = 0;
             closestStation().power = 0;
+
+            if ((this.coins += closestStation().coins)<0) {
+                closestStation().coins = this.coins-closestStation().coins;
+                this.coins = 0;
+            }
+            if ((this.power += closestStation().power)<0) {
+                closestStation().power = this.power-closestStation().power;
+                this.power = 0;
+            }
         }
 
         String move = initialLatitude + "," + initialLongitude + "," + direction + "," + this.currentPosition.latitude + "," + this.currentPosition.longitude + "," + this.coins + "," + this.power + "\n";

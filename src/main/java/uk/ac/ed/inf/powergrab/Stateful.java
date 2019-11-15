@@ -122,8 +122,6 @@ public class Stateful extends Drone {
                 if (!p1.inPlayArea() || withinStation(p1, s)) {
                     dist = Double.POSITIVE_INFINITY;
                     dists[d.ordinal()] = dist;}
-                //else if (withinStation(p1, s)) {dists[d.ordinal()] = 1000; }
-                //else if (!withinStation(p1, s)){
             }
 
         }
