@@ -10,30 +10,36 @@ public class Stateful extends Drone {
         super(latlong, seed, map );
     }
 
+
+    //A method that stores a list of positive stations
     public ArrayList<Stations> stationPos() {
         ArrayList<Stations> positiveList = new ArrayList<>();
-        for (Stations s : this.map.stations){
-            if (s.coins > 0) {
+        for (Stations s : this.map.stations)
+        {
+            if (s.coins > 0)
+            {
                 positiveList.add(s);
             }
         }
-        //System.out.println("list size = " + positiveList.size()+ " " + positiveList.toString());
         return positiveList;
     }
 
-
+    //A method that stores a list of negative stations
     public ArrayList<Stations> stationNeg() {
         ArrayList<Stations> negativeList = new ArrayList<>();
-        for (Stations s : this.map.stations){
-            if (s.coins < 0) {
+        for (Stations s : this.map.stations)
+        {
+            if (s.coins < 0)
+            {
                 negativeList.add(s);
             }
         }
-        //System.out.println("list size = " + positiveList.size() + " " + positiveList.toString());
+
         return negativeList;
     }
 
 
+    //Returns the station with the smallest distance to the drone
     public Stations closest (Position p, ArrayList<Stations> ls) {
         if (ls.isEmpty()) return null;
         Stations nearest = ls.get(0);
@@ -48,9 +54,12 @@ public class Stateful extends Drone {
         return nearest;
     }
 
+    //Check to see if a drone is in the vicinity of a negatively charged station
     public boolean withinNeg(Direction d) {
-        for (Stations s: stationNeg()) {
-            if(withinStation(this.currentPosition.nextPosition(d),s)) {
+        for (Stations s: stationNeg())
+        {
+            if(withinStation(this.currentPosition.nextPosition(d),s))
+            {
                 return true;
             }
         }
@@ -58,22 +67,23 @@ public class Stateful extends Drone {
         return false;
     }
 
-
+    //Returns the direction to move towards
     public Direction getDirection(Stations s) {
         double in = Math.toDegrees(Math.atan2((s.location.longitude - this.currentPosition.longitude),(s.location.latitude-this.currentPosition.latitude)));
         int rad = (int)Math.round(((in % 360) / 22.5)) % 16;
-        if (rad < 0) {
+        if (rad < 0)
+        {
             rad = rad + 16;
-            //no. of contains in array
+
         }
-        //System.out.println("enum index = " +rad);
+
         Direction d = Direction.values()[rad];
 
         return d;
     }
 
 
-
+    //This method returns an array of the coin values that can be transferred in each of the 16 directions
     public double[] potential_loss() {
 
         double[] neg_coins = new double[16];
@@ -93,10 +103,10 @@ public class Stateful extends Drone {
                 }
             }
         }
-        //System.out.println(Arrays.toString(neg_coins));
         return neg_coins;
     }
 
+    //Returns the index of the direction enum to avoid
     public int avoid(double[] coinage) {
         List<Integer> indices = new ArrayList<>();
         for (int i = 0;i < coinage.length;i++)
@@ -111,6 +121,7 @@ public class Stateful extends Drone {
         return dirInd;
     }
 
+    //Returns an array of directions that the drone should move towards if it encounters a negative charging station
     public double[] reroute () {
         double[] dists = new double[16];
         double dist;
@@ -118,10 +129,13 @@ public class Stateful extends Drone {
             Position p1 = this.currentPosition.nextPosition(d);
             dist = distance(p1, closest(p1, stationPos()).location);
             dists[d.ordinal()] = dist;
-            for (Stations s : stationNeg()) {
-                if (!p1.inPlayArea() || withinStation(p1, s)) {
+            for (Stations s : stationNeg())
+            {
+                if (!p1.inPlayArea() || withinStation(p1, s))
+                {
                     dist = Double.POSITIVE_INFINITY;
-                    dists[d.ordinal()] = dist;}
+                    dists[d.ordinal()] = dist;
+                }
             }
 
         }
@@ -131,13 +145,14 @@ public class Stateful extends Drone {
 
 
 
-
+    //Moves in random directions
     public  void moveRandom() {
         int d = avoid(potential_loss());
         movement(Direction.values()[d]);
 
     }
 
+    //Moves to avoid negatively charged stations
     public void moveToAvoid() {
         int d = minIndex(reroute());
         movement(Direction.values()[d]);
@@ -145,7 +160,7 @@ public class Stateful extends Drone {
 
 
 
-
+    //Check to see if the drone is going back and forth between two points
     public boolean is_Stuck() {
         if (posList.size() >= 3)
         return (posList.get(posList.size()-1).isEquals(posList.get(posList.size()-3)));
@@ -158,7 +173,8 @@ public class Stateful extends Drone {
 
     public void movetowards(Direction d) {
             if (this.currentPosition.nextPosition(d).inPlayArea() && !is_Stuck()
-            && (!withinNeg(d))) {
+            && (!withinNeg(d)))
+            {
                 movement(d);
             }
 

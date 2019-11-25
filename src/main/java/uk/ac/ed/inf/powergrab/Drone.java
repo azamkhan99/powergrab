@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * This is the main class
+ *
+ */
+
 public class Drone {
 
     double coins;
@@ -20,7 +25,7 @@ public class Drone {
     static ArrayList<String> lines = new ArrayList<>();
     static ArrayList<Position> posList = new ArrayList<>();
 
-    public double totalCoins() {
+    /*public double totalCoins() {
         ArrayList<Double> coinList = new ArrayList<>();
         double sum = 0;
         for (Stations s : this.map.stations){
@@ -30,7 +35,7 @@ public class Drone {
         }
         System.out.println("\nlol: "+ sum + "\n");
         return sum;
-    }
+    }*/
 
 
     public Drone(Position latlong, int seed, Map map){
@@ -44,6 +49,8 @@ public class Drone {
 
     }
 
+
+    //A simple function to calculate the euclidean distance between two points
     public double distance(Position position, Position location) {
         double x1 = position.latitude;
         double y1 = position.longitude;
@@ -53,6 +60,7 @@ public class Drone {
         return d;
     }
 
+    //A method which returns the index of the largest element in an array
     public int maxIndex(double[] arr){
         if ( arr == null || arr.length == 0 )
         {
@@ -66,6 +74,7 @@ public class Drone {
         return biggest;
     }
 
+    //A method which returns the index of the smallest element in an array
     public int minIndex(double[] arr){
         if ( arr == null || arr.length == 0 )
         {
@@ -79,12 +88,12 @@ public class Drone {
         return biggest;
     }
 
-
+    //A function to check if the drone is within a charging station
     public boolean withinStation (Position position, Stations station) {
         return distance(position, station.location) < 0.00025;
     }
 
-
+    //A method which returns the station with the smallest distance to the drone
     public Stations closestStation () {
         Stations nearest = this.map.stations.get(0);
         for (Stations s : this.map.stations)
@@ -97,17 +106,11 @@ public class Drone {
         return nearest;
     }
 
-    public ArrayList<Direction> ChecklegalMoves() {
-        ArrayList<Direction> legalMoves = new ArrayList<>();
-        for (Direction direction: Direction.values()) {
-            if(this.currentPosition.nextPosition(direction).inPlayArea()) {
-                legalMoves.add(direction);
-            }
-        }
-        return legalMoves;
-    }
 
-
+    /**
+     * The main method used for the drone's movement which stores the current coin, location and power values, performs
+     * the transfer of coins and power from a charging station
+     */
     public void movement(Direction direction) {
         this.moves -= 1;
         this.power -= 1.25;
@@ -146,8 +149,7 @@ public class Drone {
 
 
 
-
-
+    //A method to produce the json file
     public void makejsonfile(String mapdate) {
         LineString ls = LineString.fromLngLats(route);
 
@@ -163,6 +165,7 @@ public class Drone {
         }
     }
 
+    //A method that produces the textfile
     public void maketxtfile(String mapdate) {
         try (FileWriter writer = new FileWriter(mapdate))
         {
