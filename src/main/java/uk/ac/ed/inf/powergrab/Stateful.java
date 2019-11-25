@@ -169,8 +169,7 @@ public class Stateful extends Drone {
     }
 
 
-    //if equal to second last position, choose new direction.
-
+    //Moves towards closest positive station and if stuck in a loop, move in a random legal direction
     public void movetowards(Direction d) {
             if (this.currentPosition.nextPosition(d).inPlayArea() && !is_Stuck()
             && (!withinNeg(d)))
@@ -190,17 +189,21 @@ public class Stateful extends Drone {
 
 
 
-
+    //Removes a station from the list which has already been visited
     public void removeStation(ArrayList<Stations> ls) { ls.removeIf(stations -> stations.coins == 0); }
 
+    
+    //Method to make the drone move towards positive stations until all have been visited
     public void strategy() {
-        //System.out.println(this.currentPosition.toString());
-        if (closest(this.currentPosition,stationPos()) == null) { moveRandom();} else {
+        if (closest(this.currentPosition,stationPos()) == null) { moveRandom();} else 
+        {
             movetowards(getDirection(closest(this.currentPosition,stationPos())));
-            removeStation(stationPos());}
-        //System.out.println(this.currentPosition.toString());
+            removeStation(stationPos());
+            }
     }
-
+    
+    
+    //Method to make the drone move until it is out of power or moves
     public void StrategyCall() {
         double tc = map.totalCoins();
         do {
@@ -212,8 +215,8 @@ public class Stateful extends Drone {
         System.out.println("\ntotal coins= " + tc + "\n" + "percent of coins collected: " +perc);
 
         System.out.println("\nDrone coins = " + this.coins);
-        //System.out.println("Drone power = " + this.power);
-
+        System.out.println("\nDrone power = " + this.power);
     }
+   
 
 }

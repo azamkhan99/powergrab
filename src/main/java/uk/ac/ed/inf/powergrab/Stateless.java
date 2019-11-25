@@ -10,6 +10,7 @@ public class Stateless extends Drone {
     }
 
 
+    //This method returns an array of the coin values that can be transferred in each of the 16 directions
     public double[] potential_gain(){
 
         double[] coin_array = new double[16];
@@ -29,11 +30,11 @@ public class Stateless extends Drone {
                 }
             }
         }
-        //System.out.println(Arrays.toString(coin_array));
         return coin_array;
     }
 
 
+    //Returns the index of the direction enum which gives the most coins
     public int best_gain(double[] coinage) {
         List<Integer> indices = new ArrayList<>();
         for (int i = 0;i < coinage.length;i++)
@@ -59,23 +60,22 @@ public class Stateless extends Drone {
         return dirInd;
     }
 
-    public void goHere() { //moves in chosen direction
+    //moves in chosen direction
+    public void goHere() { 
         int d = best_gain(potential_gain());
         System.out.println("direction chosen: " + Direction.values()[d]);
         movement(Direction.values()[d]);
     }
 
 
-    public void strategy() {
-        goHere();
-    }
+  
 
-
+    //Method to make the drone move until it is out of moves or power
     public void callStrategy() {
 
         do {
             System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
-            strategy();
+            goHere();
 
         } while (this.moves > 0 && this.power > 0);
 

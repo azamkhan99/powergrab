@@ -141,7 +141,7 @@ public class Drone {
             }
         }
 
-        String move = initialLatitude + "," + initialLongitude + "," + direction + "," + this.currentPosition.latitude + "," + this.currentPosition.longitude + "," + this.coins + "," + this.power + "\n";
+        String move = initialLatitude + "," + initialLongitude + "," + direction + "," + this.currentPosition.latitude + "," + this.currentPosition.longitude + "," + this.coins + "," + this.power;
         lines.add(move);
         Point r = Point.fromLngLat(this.currentPosition.longitude, this.currentPosition.latitude);
         route.add((r));
