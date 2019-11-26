@@ -12,9 +12,7 @@ public class App
 
     public static void main(String[] args) {
     	try {
-    		
-       
-      
+
         String day = args[0];  
         String month = args[1];
         String year = args[2];

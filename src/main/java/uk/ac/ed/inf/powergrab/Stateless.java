@@ -10,29 +10,6 @@ public class Stateless extends Drone {
     }
 
 
-    //This method returns an array of the coin values that can be transferred in each of the 16 directions
-    public double[] potential_gain(){
-
-        double[] coin_array = new double[16];
-
-        for (Direction direction : Direction.values())
-        {
-            Position p1 = this.currentPosition.nextPosition(direction);
-            for (Stations s : this.map.stations)
-            {
-                if (!p1.inPlayArea())
-                {
-                    coin_array[direction.ordinal()] = Double.NEGATIVE_INFINITY;
-                }
-                else if (withinStation(p1, s))
-                {
-                    coin_array[direction.ordinal()] = s.coins;
-                }
-            }
-        }
-        return coin_array;
-    }
-
 
     //Returns the index of the direction enum which gives the most coins
     public int best_gain(double[] coinage) {
@@ -62,8 +39,7 @@ public class Stateless extends Drone {
 
     //moves in chosen direction
     public void goHere() { 
-        int d = best_gain(potential_gain());
-        System.out.println("direction chosen: " + Direction.values()[d]);
+        int d = best_gain(potential_gain(this.map.stations));
         movement(Direction.values()[d]);
     }
 

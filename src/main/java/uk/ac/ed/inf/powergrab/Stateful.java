@@ -54,6 +54,26 @@ public class Stateful extends Drone {
         return nearest;
     }
 
+    public Stations second (Position p, ArrayList<Stations> ls) {
+        if (ls.isEmpty()) return null;
+        Stations closest = ls.get(0);
+        //Stations sec = ls.get(1);
+        for (Stations s : ls)
+        {
+            if ((distance(p, s.location) > distance(p, closest.location)))
+            {
+                    closest = s;
+            }
+        }
+        //System.out.println("closest positive station: " + nearest.toString());
+        return closest;
+    }
+
+
+
+
+
+
     //Check to see if a drone is in the vicinity of a negatively charged station
     public boolean withinNeg(Direction d) {
         for (Stations s: stationNeg())
@@ -83,28 +103,6 @@ public class Stateful extends Drone {
     }
 
 
-    //This method returns an array of the coin values that can be transferred in each of the 16 directions
-    public double[] potential_loss() {
-
-        double[] neg_coins = new double[16];
-
-        for (Direction direction : Direction.values())
-        {
-            Position p1 = this.currentPosition.nextPosition(direction);
-            for (Stations s : stationNeg())
-            {
-                if (!p1.inPlayArea())
-                {
-                    neg_coins[direction.ordinal()] = Double.NEGATIVE_INFINITY;
-                }
-                else if (withinStation(p1, s))
-                {
-                    neg_coins[direction.ordinal()] = s.coins;
-                }
-            }
-        }
-        return neg_coins;
-    }
 
     //Returns the index of the direction enum to avoid
     public int avoid(double[] coinage) {
@@ -147,7 +145,7 @@ public class Stateful extends Drone {
 
     //Moves in random directions
     public  void moveRandom() {
-        int d = avoid(potential_loss());
+        int d = avoid(potential_gain(stationNeg()));
         movement(Direction.values()[d]);
 
     }
@@ -158,15 +156,32 @@ public class Stateful extends Drone {
         movement(Direction.values()[d]);
     }
 
+    public void moveFarthest() {
+        movement(getDirection(second(this.currentPosition,stationPos())));
+    }
+
 
 
     //Check to see if the drone is going back and forth between two points
     public boolean is_Stuck() {
         if (posList.size() >= 3)
-        return (posList.get(posList.size()-1).isEquals(posList.get(posList.size()-3)));
+        return (posList.get(posList.size()-1).isEquals(posList.get(posList.size()-3))
+                );
+        /*|| posList.get(posList.size()-1).isEquals(posList.get(posList.size()-5))
+        //);
+        || posList.get(posList.size()-1).isEquals(posList.get(posList.size()-7))
+        //);
+        || posList.get(posList.size()-1).isEquals(posList.get(posList.size()-9))
+        //);
+        || posList.get(posList.size()-1).isEquals(posList.get(posList.size()-11))
+        );*/
+
+
         else return false;
 
     }
+
+
 
 
     //Moves towards closest positive station and if stuck in a loop, move in a random legal direction
@@ -214,8 +229,8 @@ public class Stateful extends Drone {
         double perc = (this.coins/tc *100);
         System.out.println("\ntotal coins= " + tc + "\n" + "percent of coins collected: " +perc);
 
-        System.out.println("\nDrone coins = " + this.coins);
-        System.out.println("\nDrone power = " + this.power);
+        //System.out.println("\nDrone coins = " + this.coins);
+        //System.out.println("\nDrone power = " + this.power);
     }
    
 

@@ -25,17 +25,6 @@ public class Drone {
     static ArrayList<String> lines = new ArrayList<>();
     static ArrayList<Position> posList = new ArrayList<>();
 
-    /*public double totalCoins() {
-        ArrayList<Double> coinList = new ArrayList<>();
-        double sum = 0;
-        for (Stations s : this.map.stations){
-            if (s.coins > 0) {
-                sum += s.coins;
-            }
-        }
-        System.out.println("\nlol: "+ sum + "\n");
-        return sum;
-    }*/
 
 
     public Drone(Position latlong, int seed, Map map){
@@ -107,6 +96,31 @@ public class Drone {
     }
 
 
+
+    //This method returns an array of the coin values that can be transferred in each of the 16 directions
+    public double[] potential_gain(ArrayList<Stations> stations){
+
+        double[] coin_array = new double[16];
+
+        for (Direction direction : Direction.values())
+        {
+            Position p1 = this.currentPosition.nextPosition(direction);
+            for (Stations s : stations)
+            {
+                if (!p1.inPlayArea())
+                {
+                    coin_array[direction.ordinal()] = Double.NEGATIVE_INFINITY;
+                }
+                else if (withinStation(p1, s))
+                {
+                    coin_array[direction.ordinal()] = s.coins;
+                }
+            }
+        }
+        return coin_array;
+    }
+
+
     /**
      * The main method used for the drone's movement which stores the current coin, location and power values, performs
      * the transfer of coins and power from a charging station
@@ -118,9 +132,7 @@ public class Drone {
         Double initialLongitude = this.currentPosition.longitude;
 
         this.currentPosition = currentPosition.nextPosition(direction);
-        //Position newPosition = this.currentPosition;
         posList.add(this.currentPosition);
-        //System.out.println(posList.toString());
 
 
         if (withinStation(this.currentPosition, closestStation()))

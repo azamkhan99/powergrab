@@ -10,9 +10,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Map {
-     public static ArrayList<Stations> stations = new ArrayList<Stations>();
-     private String mapSource = "";
-     public static FeatureCollection fcs;
+    public static ArrayList<Stations> stations = new ArrayList<Stations>();
+    public static FeatureCollection fcs;
 
     public Map(String mapDate) throws IOException {
         URL mapUrl = new URL("http://homepages.inf.ed.ac.uk/stg/powergrab/" + mapDate + "/powergrabmap.geojson");
@@ -23,13 +22,13 @@ public class Map {
         httpConn.setDoInput(true);
         httpConn.connect();
         InputStream is = httpConn.getInputStream();
-        this.mapSource = convertStreamToString(is);
+        String mapSource = convertStreamToString(is);
         this.fcs = FeatureCollection.fromJson(mapSource);
         add2map(fcs);
 
     }
 
-    static String convertStreamToString(java.io.InputStream is) {
+    private String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
