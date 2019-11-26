@@ -60,7 +60,7 @@ public class Stateful extends Drone {
         //Stations sec = ls.get(1);
         for (Stations s : ls)
         {
-            if ((distance(p, s.location) > distance(p, closest.location)))
+            if ((distance(p, s.location) > distance(p, closest.location))&&((distance(p, s.location) < distance(p, closest.location))))
             {
                     closest = s;
             }
@@ -115,8 +115,7 @@ public class Stateful extends Drone {
             }
         }
         int randInd = rnd.nextInt(indices.size());
-        int dirInd = indices.get(randInd);
-        return dirInd;
+        return indices.get(randInd);
     }
 
     //Returns an array of directions that the drone should move towards if it encounters a negative charging station

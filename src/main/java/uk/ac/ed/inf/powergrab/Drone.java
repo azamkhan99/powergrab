@@ -69,12 +69,12 @@ public class Drone {
         {
             return -1;
         } // null or empty
-        int biggest = 0;
+        int smallest = 0;
         for (int i = 1;i < arr.length;i++)
         {
-            if (arr[i] < arr[biggest]) biggest = i;
+            if (arr[i] < arr[smallest]) smallest = i;
         }
-        return biggest;
+        return smallest;
     }
 
     //A function to check if the drone is within a charging station
