@@ -6,40 +6,39 @@ package uk.ac.ed.inf.powergrab;
 
 public class Stateful extends Drone {
 
+    private ArrayList<Stations> list_closest = new ArrayList<>();
+    private ArrayList<Stations> positive_stations = new ArrayList<>();
+    private ArrayList<Stations> negative_stations = new ArrayList<>();
+
+
     public Stateful(Position latlong, int seed, Map map) {
+
         super(latlong, seed, map );
-    }
-
-
-    //A method that stores a list of positive stations
-    public ArrayList<Stations> stationPos() {
-        ArrayList<Stations> positiveList = new ArrayList<>();
-        for (Stations s : this.map.stations)
+        for (Stations s : map.stations)
         {
-            if (s.coins > 0)
-            {
-                positiveList.add(s);
-            }
-        }
-        return positiveList;
-    }
-
-    //A method that stores a list of negative stations
-    public ArrayList<Stations> stationNeg() {
-        ArrayList<Stations> negativeList = new ArrayList<>();
-        for (Stations s : this.map.stations)
-        {
-            if (s.coins < 0)
-            {
-                negativeList.add(s);
-            }
+            if (s.coins > 0) positive_stations.add(s);
+            if (s.coins < 0) negative_stations.add(s);
         }
 
-        return negativeList;
     }
 
 
-    //Returns the station with the smallest distance to the drone
+
+    //Check to see if a drone is in the vicinity of a negatively charged station
+    public boolean withinNeg(Direction d) {
+        for (Stations s: negative_stations)
+        {
+            if(withinStation(this.currentPosition.nextPosition(d),s))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    //Returns the station with the smallest distance to a position
     public Stations closest (Position p, ArrayList<Stations> ls) {
         if (ls.isEmpty()) return null;
         Stations nearest = ls.get(0);
@@ -54,38 +53,8 @@ public class Stateful extends Drone {
         return nearest;
     }
 
-    public Stations second (Position p, ArrayList<Stations> ls) {
-        if (ls.isEmpty()) return null;
-        Stations closest = ls.get(0);
-        //Stations sec = ls.get(1);
-        for (Stations s : ls)
-        {
-            if ((distance(p, s.location) > distance(p, closest.location))&&((distance(p, s.location) < distance(p, closest.location))))
-            {
-                    closest = s;
-            }
-        }
-        //System.out.println("closest positive station: " + nearest.toString());
-        return closest;
-    }
 
 
-
-
-
-
-    //Check to see if a drone is in the vicinity of a negatively charged station
-    public boolean withinNeg(Direction d) {
-        for (Stations s: stationNeg())
-        {
-            if(withinStation(this.currentPosition.nextPosition(d),s))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     //Returns the direction to move towards
     public Direction getDirection(Stations s) {
@@ -97,9 +66,7 @@ public class Stateful extends Drone {
 
         }
 
-        Direction d = Direction.values()[rad];
-
-        return d;
+        return Direction.values()[rad];
     }
 
 
@@ -124,19 +91,14 @@ public class Stateful extends Drone {
         double dist;
         for (Direction d : Direction.values()) {
             Position p1 = this.currentPosition.nextPosition(d);
-            dist = distance(p1, closest(p1, stationPos()).location);
+            dist = distance(p1, closest(p1, positive_stations).location);
             dists[d.ordinal()] = dist;
-            for (Stations s : stationNeg())
-            {
-                if (!p1.inPlayArea() || withinStation(p1, s))
+                if (!p1.inPlayArea() || withinNeg(d))
                 {
                     dist = Double.POSITIVE_INFINITY;
                     dists[d.ordinal()] = dist;
                 }
-            }
-
         }
-        System.out.println(Arrays.toString(dists));
         return dists;
     }
 
@@ -144,7 +106,7 @@ public class Stateful extends Drone {
 
     //Moves in random directions
     public  void moveRandom() {
-        int d = avoid(potential_gain(stationNeg()));
+        int d = avoid(potential_gain(negative_stations));
         movement(Direction.values()[d]);
 
     }
@@ -155,29 +117,23 @@ public class Stateful extends Drone {
         movement(Direction.values()[d]);
     }
 
-    public void moveFarthest() {
-        movement(getDirection(second(this.currentPosition,stationPos())));
-    }
 
 
 
     //Check to see if the drone is going back and forth between two points
     public boolean is_Stuck() {
         if (posList.size() >= 3)
-        return (posList.get(posList.size()-1).isEquals(posList.get(posList.size()-3))
-                );
-        /*|| posList.get(posList.size()-1).isEquals(posList.get(posList.size()-5))
-        //);
-        || posList.get(posList.size()-1).isEquals(posList.get(posList.size()-7))
-        //);
-        || posList.get(posList.size()-1).isEquals(posList.get(posList.size()-9))
-        //);
-        || posList.get(posList.size()-1).isEquals(posList.get(posList.size()-11))
-        );*/
-
+            return (posList.get(posList.size()-1).isEquals(posList.get(posList.size()-3)));
 
         else return false;
 
+    }
+
+    public boolean in_loop() {
+        if (list_closest.size() >= 20 && positive_stations.size()>1)
+            return (list_closest.get(list_closest.size()-1).isEquals(list_closest.get(list_closest.size()-20)));
+
+        else return false;
     }
 
 
@@ -200,20 +156,31 @@ public class Stateful extends Drone {
 
 
 
-
-
-
     //Removes a station from the list which has already been visited
     public void removeStation(ArrayList<Stations> ls) { ls.removeIf(stations -> stations.coins == 0); }
 
     
     //Method to make the drone move towards positive stations until all have been visited
     public void strategy() {
-        if (closest(this.currentPosition,stationPos()) == null) { moveRandom();} else 
+        Stations nextStation = closest(this.currentPosition, positive_stations);
+        list_closest.add(nextStation);
+        if (nextStation == null)
         {
-            movetowards(getDirection(closest(this.currentPosition,stationPos())));
-            removeStation(stationPos());
-            }
+            moveRandom();
+        }
+
+        else if (in_loop())
+        {
+            System.out.println("stuck in loop");
+            movetowards(getDirection(positive_stations.get(rnd.nextInt(positive_stations.size()))));
+            removeStation(positive_stations);
+        }
+
+        else
+        {
+            movetowards(getDirection(nextStation));
+            removeStation(positive_stations);
+        }
     }
     
     
@@ -222,7 +189,9 @@ public class Stateful extends Drone {
         double tc = map.totalCoins();
         do {
             System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
+
             strategy();
+
 
         } while (this.moves > 0 && this.power > 0);
         double perc = (this.coins/tc *100);

@@ -13,4 +13,9 @@ public class Stations {
     public String toString() {
         return "coins: " + this.coins + "power: " + this.power + "latitude: " + this.location.latitude + "longitude: " + this.location.longitude;
     }
+
+    public boolean isEquals (Stations s) {
+        return this.coins == s.coins && this.power == s.power && this.location == s.location;
+    }
+
 }

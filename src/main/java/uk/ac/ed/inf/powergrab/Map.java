@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Map {
-    public static ArrayList<Stations> stations = new ArrayList<Stations>();
+    public ArrayList<Stations> stations = new ArrayList<Stations>();
     public static FeatureCollection fcs;
 
     public Map(String mapDate) throws IOException {
@@ -23,7 +23,7 @@ public class Map {
         httpConn.connect();
         InputStream is = httpConn.getInputStream();
         String mapSource = convertStreamToString(is);
-        this.fcs = FeatureCollection.fromJson(mapSource);
+        fcs = FeatureCollection.fromJson(mapSource);
         add2map(fcs);
 
     }

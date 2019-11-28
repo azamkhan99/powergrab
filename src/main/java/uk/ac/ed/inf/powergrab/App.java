@@ -45,6 +45,7 @@ public class App
 
             Stateful d = new Stateful(start, seed, m);
             d.StrategyCall();
+
             d.maketxtfile(datetxt);
             d.makejsonfile(datejson);
             

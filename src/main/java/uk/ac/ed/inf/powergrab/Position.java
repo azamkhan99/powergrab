@@ -31,7 +31,7 @@ public class Position {
 		}
 
 	public boolean isEquals(Position p) {
-		return this.latitude == p.latitude & this.longitude == p.longitude;
+		return this.latitude == p.latitude && this.longitude == p.longitude;
 	}
 
 	}

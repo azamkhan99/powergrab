@@ -38,13 +38,13 @@ public class Stateless extends Drone {
     }
 
     //moves in chosen direction
-    public void goHere() { 
-        int d = best_gain(potential_gain(this.map.stations));
+    public void goHere() {
+        int d = best_gain(potential_gain(map.stations));
         movement(Direction.values()[d]);
     }
 
 
-  
+
 
     //Method to make the drone move until it is out of moves or power
     public void callStrategy() {

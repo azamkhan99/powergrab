@@ -34,13 +34,13 @@ public class Drone {
         this.moves = 250;
         this.power = 250.0;
         this.map = map;
-        this.route.add(Point.fromLngLat(this.currentPosition.longitude, this.currentPosition.latitude));
+        route.add(Point.fromLngLat(this.currentPosition.longitude, this.currentPosition.latitude));
 
     }
 
 
     //A simple function to calculate the euclidean distance between two points
-    public double distance(Position position, Position location) {
+    public static double distance(Position position, Position location) {
         double x1 = position.latitude;
         double y1 = position.longitude;
         double x2 = location.latitude;
