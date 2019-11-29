@@ -78,14 +78,14 @@ public class Drone {
     }
 
     //A function to check if the drone is within a charging station
-    public boolean withinStation (Position position, Stations station) {
+    public boolean withinStation(Position position, Station station) {
         return distance(position, station.location) < 0.00025;
     }
 
     //A method which returns the station with the smallest distance to the drone
-    public Stations closestStation () {
-        Stations nearest = this.map.stations.get(0);
-        for (Stations s : this.map.stations)
+    public Station closestStation () {
+        Station nearest = this.map.stations.get(0);
+        for (Station s : this.map.stations)
         {
             if (distance(this.currentPosition, s.location) < distance(this.currentPosition, nearest.location))
             {
@@ -98,14 +98,14 @@ public class Drone {
 
 
     //This method returns an array of the coin values that can be transferred in each of the 16 directions
-    public double[] potential_gain(ArrayList<Stations> stations){
+    public double[] potential_gain(ArrayList<Station> stations){
 
         double[] coin_array = new double[16];
 
         for (Direction direction : Direction.values())
         {
             Position p1 = this.currentPosition.nextPosition(direction);
-            for (Stations s : stations)
+            for (Station s : stations)
             {
                 if (!p1.inPlayArea())
                 {

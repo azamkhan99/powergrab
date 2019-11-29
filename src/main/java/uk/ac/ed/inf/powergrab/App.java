@@ -13,6 +13,10 @@ public class App
     public static void main(String[] args) {
     	try {
 
+
+    	if ((Integer.parseInt(args[0]) > 31) && (Integer.parseInt(args[0]) < 0)) throw new IllegalArgumentException ("date not entered correctly");
+
+
         String day = args[0];  
         String month = args[1];
         String year = args[2];
@@ -26,11 +30,15 @@ public class App
         double longitude = Double.parseDouble(args[4]);
         Position start = new Position(latitude, longitude);
 
+            if (!(start.inPlayArea())) throw new IllegalArgumentException ("Invalid starting position");
+
         
         int seed = Integer.parseInt(args[5]);
 
-       
+        if (!args[6].equals("stateless") && !args[6].equals("stateful")) throw new IllegalArgumentException ("state not entered correctly");
         String state = args[6];
+
+
         String datejson = String.format("%s-%s-%s-%s.geojson", state, day, month, year);
         String datetxt = String.format("%s-%s-%s-%s.txt", state, day, month, year);
         if (state.equals("stateless")) {
@@ -39,8 +47,8 @@ public class App
             d.makejsonfile(datejson);
             d.maketxtfile(datetxt);
         }
-        
-       
+
+
         else if (state.equals("stateful")) {
 
             Stateful d = new Stateful(start, seed, m);
@@ -48,9 +56,9 @@ public class App
 
             d.maketxtfile(datetxt);
             d.makejsonfile(datejson);
-            
+
         }
-        
+
     	}catch (Exception e) {
     		e.printStackTrace();
     	}

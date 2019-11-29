@@ -2,7 +2,6 @@ package uk.ac.ed.inf.powergrab;
 
 import com.mapbox.geojson.*;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -10,7 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Map {
-    public ArrayList<Stations> stations = new ArrayList<Stations>();
+    public ArrayList<Station> stations = new ArrayList<Station>();
     public static FeatureCollection fcs;
 
     public Map(String mapDate) throws IOException {
@@ -28,14 +27,14 @@ public class Map {
 
     }
 
-    private String convertStreamToString(java.io.InputStream is) {
+    private String convertStreamToString(InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
 
 
-    public Position f2p (Feature f) {
+    public Position f2p(Feature f) {
         Point coords = (Point) f.geometry();
         Position p = new Position(coords.latitude(), coords.longitude());
         return p;
@@ -47,7 +46,7 @@ public class Map {
             double coins = f.getProperty("coins").getAsDouble();
             double power = f.getProperty("power").getAsDouble();
             Position location = f2p(f);
-            Stations s = new Stations(coins,power,location);
+            Station s = new Station(coins,power,location);
             stations.add(s);
         }
 
@@ -55,7 +54,7 @@ public class Map {
 
     public double totalCoins() {
         double sum = 0;
-        for (Stations s : stations){
+        for (Station s : stations){
             if (s.coins > 0) {
                 sum += s.coins;
             }
