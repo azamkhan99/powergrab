@@ -183,7 +183,7 @@ public class Stateful extends Drone {
     }
     
     
-    //Method to make the drone move until it is out of power or moves
+    //Method to make the drone move until it is out of power or moves.
      void StrategyCall() {
         double tc = map.totalCoins();
         do {
