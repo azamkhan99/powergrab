@@ -10,7 +10,7 @@ public class Stateful extends Drone {
     private ArrayList<Station> negative_stations = new ArrayList<>();
 
 
-    public Stateful(Position latlong, int seed, Map map) {
+    Stateful(Position latlong, int seed, Map map) {
 
         super(latlong, seed, map );
         for (Station s : map.stations)
@@ -48,7 +48,6 @@ public class Stateful extends Drone {
                 nearest = s;
             }
         }
-        //System.out.println("closest positive station: " + nearest.toString());
         return nearest;
     }
 
@@ -148,7 +147,8 @@ public class Stateful extends Drone {
 
             else if (is_Stuck()) {moveRandom();}
 
-            else {
+            else
+            {
                 moveToAvoid();
             }
     }
@@ -184,7 +184,7 @@ public class Stateful extends Drone {
     
     
     //Method to make the drone move until it is out of power or moves
-    public void StrategyCall() {
+     void StrategyCall() {
         double tc = map.totalCoins();
         do {
             System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);

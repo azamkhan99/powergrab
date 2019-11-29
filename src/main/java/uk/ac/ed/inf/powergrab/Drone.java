@@ -40,7 +40,7 @@ public class Drone {
 
 
     //A simple function to calculate the euclidean distance between two points
-    public static double distance(Position position, Position location) {
+    public double distance(Position position, Position location) {
         double x1 = position.latitude;
         double y1 = position.longitude;
         double x2 = location.latitude;

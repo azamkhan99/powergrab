@@ -5,14 +5,14 @@ import java.util.*;
 public class Stateless extends Drone {
 
 
-    public Stateless(Position latlong, int seed, Map map) {
+    Stateless(Position latlong, int seed, Map map) {
         super(latlong, seed, map);
     }
 
 
 
     //Returns the index of the direction enum which gives the most coins
-    public int best_gain(double[] coinage) {
+    private int best_gain(double[] coinage) {
         List<Integer> indices = new ArrayList<>();
         for (int i = 0;i < coinage.length;i++)
         {
@@ -38,7 +38,7 @@ public class Stateless extends Drone {
     }
 
     //moves in chosen direction
-    public void goHere() {
+    private void goHere() {
         int d = best_gain(potential_gain(map.stations));
         movement(Direction.values()[d]);
     }
@@ -47,7 +47,7 @@ public class Stateless extends Drone {
 
 
     //Method to make the drone move until it is out of moves or power
-    public void callStrategy() {
+     void callStrategy() {
 
         do {
             System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);

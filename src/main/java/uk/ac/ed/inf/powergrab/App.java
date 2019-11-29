@@ -13,8 +13,7 @@ public class App
     public static void main(String[] args) {
     	try {
 
-
-    	if ((Integer.parseInt(args[0]) > 31) && (Integer.parseInt(args[0]) < 0)) throw new IllegalArgumentException ("date not entered correctly");
+    	    
 
 
         String day = args[0];  

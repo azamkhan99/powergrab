@@ -14,7 +14,7 @@ public class Station {
         return "coins: " + this.coins + "power: " + this.power + "latitude: " + this.location.latitude + "longitude: " + this.location.longitude;
     }
 
-    public boolean isEquals(Station s) {
+    boolean isEquals(Station s) {
         return this.coins == s.coins && this.power == s.power && this.location == s.location;
     }
 
