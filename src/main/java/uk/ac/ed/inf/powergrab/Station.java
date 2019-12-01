@@ -5,8 +5,10 @@ public class Station {
     double power;
     Position location;
 
-    public Station(double coins, double power, Position location){
-        this.coins = coins; this.power = power; this.location = location;
+    public Station(double coins, double power, Position location) {
+        this.coins = coins;
+        this.power = power;
+        this.location = location;
     }
 
 

@@ -23,7 +23,7 @@ public class Map {
         InputStream is = httpConn.getInputStream();
         String mapSource = convertStreamToString(is);
         fcs = FeatureCollection.fromJson(mapSource);
-        add2map(fcs);
+        addToMap(fcs);
 
     }
 
@@ -33,20 +33,19 @@ public class Map {
     }
 
 
-
-    public Position f2p(Feature f) {
+    public Position fToP(Feature f) {
         Point coords = (Point) f.geometry();
         Position p = new Position(coords.latitude(), coords.longitude());
         return p;
     }
 
 
-    public void add2map(FeatureCollection fcs){
+    public void addToMap(FeatureCollection fcs) {
         for (Feature f : fcs.features()) {
             double coins = f.getProperty("coins").getAsDouble();
             double power = f.getProperty("power").getAsDouble();
-            Position location = f2p(f);
-            Station s = new Station(coins,power,location);
+            Position location = fToP(f);
+            Station s = new Station(coins, power, location);
             stations.add(s);
         }
 
@@ -54,16 +53,13 @@ public class Map {
 
     public double totalCoins() {
         double sum = 0;
-        for (Station s : stations){
+        for (Station s : stations) {
             if (s.coins > 0) {
                 sum += s.coins;
             }
         }
         return sum;
     }
-
-
-
 
 
 }
