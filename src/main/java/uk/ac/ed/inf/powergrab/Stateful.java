@@ -9,7 +9,7 @@ public class Stateful extends Drone {
     private ArrayList<Station> positiveStations = new ArrayList<>();
     private ArrayList<Station> negativeStations = new ArrayList<>();
 
-
+//
     Stateful(Position latLong, int seed, Map map) {
 
         super(latLong, seed, map);
