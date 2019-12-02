@@ -13,9 +13,9 @@ public class Stateful extends Drone {
     Stateful(Position latLong, int seed, Map map) {
 
         super(latLong, seed, map);
-        for (Station s : map.stations) {
-            if (s.coins > 0) positiveStations.add(s);
-            if (s.coins < 0) negativeStations.add(s);
+        for (Station s : map.getStations()) {
+            if (s.getCoins() > 0) positiveStations.add(s);
+            if (s.getCoins() < 0) negativeStations.add(s);
         }
 
     }
@@ -24,7 +24,7 @@ public class Stateful extends Drone {
     //Check to see if a drone is in the vicinity of a negatively charged station
     private boolean withinNeg(Direction d) {
         for (Station s : negativeStations) {
-            if (withinStation(this.currentPosition.nextPosition(d), s)) {
+            if (withinStation(this.getCurrentPosition().nextPosition(d), s)) {
                 return true;
             }
         }
@@ -37,7 +37,7 @@ public class Stateful extends Drone {
         if (ls.isEmpty()) return null;
         Station nearest = ls.get(0);
         for (Station s : ls) {
-            if (distance(p, s.location) < distance(p, nearest.location)) {
+            if (distance(p, s.getLocation()) < distance(p, nearest.getLocation())) {
                 nearest = s;
             }
         }
@@ -47,7 +47,7 @@ public class Stateful extends Drone {
 
     //Returns the direction to move towards
     private Direction getDirection(Station s) {
-        double in = Math.toDegrees(Math.atan2((s.location.longitude - this.currentPosition.longitude), (s.location.latitude - this.currentPosition.latitude)));
+        double in = Math.toDegrees(Math.atan2((s.getLocation().longitude - this.getCurrentPosition().longitude), (s.getLocation().latitude - this.getCurrentPosition().latitude)));
         int rad = (int) Math.round(((in % 360) / 22.5)) % 16;
         if (rad < 0) {
             rad = rad + 16;
@@ -66,7 +66,7 @@ public class Stateful extends Drone {
                 indices.add(i);
             }
         }
-        int randInd = rnd.nextInt(indices.size());
+        int randInd = getRnd().nextInt(indices.size());
         return indices.get(randInd);
     }
 
@@ -75,8 +75,8 @@ public class Stateful extends Drone {
         double[] dists = new double[16];
         double dist;
         for (Direction d : Direction.values()) {
-            Position p1 = this.currentPosition.nextPosition(d);
-            dist = distance(p1, closest(p1, positiveStations).location);
+            Position p1 = this.getCurrentPosition().nextPosition(d);
+            dist = distance(p1, closest(p1, positiveStations).getLocation());
             dists[d.ordinal()] = dist;
             if (!p1.inPlayArea() || withinNeg(d)) {
                 dist = Double.POSITIVE_INFINITY;
@@ -103,8 +103,8 @@ public class Stateful extends Drone {
 
     //Check to see if the drone is going back and forth between two points
     private boolean isStuck() {
-        if (posList.size() >= 3)
-            return (posList.get(posList.size() - 1).isEquals(posList.get(posList.size() - 3)));
+        if (getPosList().size() >= 3)
+            return (getPosList().get(getPosList().size() - 1).isEquals(getPosList().get(getPosList().size() - 3)));
 
         else return false;
 
@@ -120,7 +120,7 @@ public class Stateful extends Drone {
 
     //Moves towards closest positive station and if stuck in a loop, move in a random legal direction
     private void moveTowards(Direction d) {
-        if (this.currentPosition.nextPosition(d).inPlayArea() && !isStuck()
+        if (this.getCurrentPosition().nextPosition(d).inPlayArea() && !isStuck()
                 && (!withinNeg(d))) {
             movement(d);
         } else if (isStuck()) {
@@ -133,19 +133,19 @@ public class Stateful extends Drone {
 
     //Removes a station from the list which has already been visited
     private void removeStation(ArrayList<Station> ls) {
-        ls.removeIf(stations -> stations.coins == 0);
+        ls.removeIf(stations -> stations.getCoins() == 0);
     }
 
 
     //Method to make the drone move towards positive stations until all have been visited
     private void strategy() {
-        Station nextStation = closest(this.currentPosition, positiveStations);
+        Station nextStation = closest(this.getCurrentPosition(), positiveStations);
         listClosest.add(nextStation);
         if (nextStation == null) {
             moveRandom();
         } else if (inLoop()) {
             System.out.println("stuck in loop");
-            moveTowards(getDirection(positiveStations.get(rnd.nextInt(positiveStations.size()))));
+            moveTowards(getDirection(positiveStations.get(getRnd().nextInt(positiveStations.size()))));
             removeStation(positiveStations);
         } else {
             moveTowards(getDirection(nextStation));
@@ -156,15 +156,15 @@ public class Stateful extends Drone {
 
     //Method to make the drone move until it is out of power or moves.
     void strategyCall() {
-        double tc = map.totalCoins();
+        double tc = getMap().totalCoins();
         do {
-            System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
+            System.out.println("\n MOVE: " + (250 - this.getMoves()) + " POWER: " + this.getPower() + " COINS: " + this.getCoins());
 
             strategy();
 
 
-        } while (this.moves > 0 && this.power > 0);
-        double percent = (this.coins / tc * 100);
+        } while (this.getMoves() > 0 && this.getPower() > 0);
+        double percent = (this.getCoins() / tc * 100);
         System.out.println("\ntotal coins= " + tc + "\n" + "percent of coins collected: " + percent);
 
         //System.out.println("\nDrone coins = " + this.coins);

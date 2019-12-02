@@ -9,7 +9,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Map {
-    public ArrayList<Station> stations = new ArrayList<Station>();
+
+
+    private ArrayList<Station> stations = new ArrayList<Station>();
     public static FeatureCollection fcs;
 
     public Map(String mapDate) throws IOException {
@@ -25,6 +27,10 @@ public class Map {
         fcs = FeatureCollection.fromJson(mapSource);
         addToMap(fcs);
 
+    }
+
+    public ArrayList<Station> getStations() {
+        return stations;
     }
 
     public String convertStreamToString(InputStream is) {
@@ -54,8 +60,8 @@ public class Map {
     public double totalCoins() {
         double sum = 0;
         for (Station s : stations) {
-            if (s.coins > 0) {
-                sum += s.coins;
+            if (s.getCoins() > 0) {
+                sum += s.getCoins();
             }
         }
         return sum;

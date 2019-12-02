@@ -13,15 +13,53 @@ import java.util.*;
 
 public class Drone {
 
-    double coins;
-    int moves;
-    double power;
-    Position currentPosition;
-    Random rnd;
-    Map map;
-    static ArrayList<Point> route = new ArrayList<Point>();
-    static ArrayList<String> lines = new ArrayList<>();
-    static ArrayList<Position> posList = new ArrayList<>();
+    private double coins;
+    private int moves;
+    private double power;
+    private Position currentPosition;
+    private Random rnd;
+    private Map map;
+    private ArrayList<Point> route = new ArrayList<Point>();
+    private ArrayList<String> lines = new ArrayList<>();
+    private ArrayList<Position> posList = new ArrayList<>();
+
+
+    public Map getMap() {
+        return map;
+    }
+
+    public double getCoins() {
+        return coins;
+    }
+
+    public void setCoins(double coins) {
+        this.coins = coins;
+    }
+
+    public int getMoves() {
+        return moves;
+    }
+
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(double power) {
+        this.power = power;
+    }
+
+    public Position getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public Random getRnd() {
+        return rnd;
+    }
+
+    public ArrayList<Position> getPosList() {
+        return posList;
+    }
+
 
 
     public Drone(Position latlong, int seed, Map map) {
@@ -72,14 +110,14 @@ public class Drone {
 
     //A function to check if the drone is within a charging station
     public boolean withinStation(Position position, Station station) {
-        return distance(position, station.location) < 0.00025;
+        return distance(position, station.getLocation()) < 0.00025;
     }
 
     //A method which returns the station with the smallest distance to the drone
     public Station closestStation() {
-        Station nearest = this.map.stations.get(0);
-        for (Station s : this.map.stations) {
-            if (distance(this.currentPosition, s.location) < distance(this.currentPosition, nearest.location)) {
+        Station nearest = this.map.getStations().get(0);
+        for (Station s : this.map.getStations()) {
+            if (distance(this.currentPosition, s.getLocation()) < distance(this.currentPosition, nearest.getLocation())) {
                 nearest = s;
             }
         }
@@ -98,7 +136,7 @@ public class Drone {
                 if (!p1.inPlayArea()) {
                     coinArray[direction.ordinal()] = Double.NEGATIVE_INFINITY;
                 } else if (withinStation(p1, s)) {
-                    coinArray[direction.ordinal()] = s.coins;
+                    coinArray[direction.ordinal()] = s.getCoins();
                 }
             }
         }
@@ -122,17 +160,17 @@ public class Drone {
 
         if (withinStation(this.currentPosition, closestStation())) {
 
-            this.coins += closestStation().coins;
-            this.power += closestStation().power;
-            closestStation().coins = 0;
-            closestStation().power = 0;
+            this.coins += closestStation().getCoins();
+            this.power += closestStation().getPower();
+            closestStation().setCoins(0);
+            closestStation().setPower(0);
 
-            if ((this.coins += closestStation().coins) < 0) {
-                closestStation().coins = this.coins - closestStation().coins;
+            if ((this.coins += closestStation().getCoins()) < 0) {
+                closestStation().setCoins(this.coins - closestStation().getCoins());
                 this.coins = 0;
             }
-            if ((this.power += closestStation().power) < 0) {
-                closestStation().power = this.power - closestStation().power;
+            if ((this.power += closestStation().getPower()) < 0) {
+                closestStation().setPower(this.power - closestStation().getPower());
                 this.power = 0;
             }
         }

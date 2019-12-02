@@ -23,7 +23,7 @@ public class Stateless extends Drone {
         if (Arrays.stream(coinage).max().getAsDouble() < 0.0) {
             dirInd = maxIndex(coinage);
         } else if (Arrays.stream(coinage).max().getAsDouble() == 0.0) {
-            int randInd = rnd.nextInt(indices.size());
+            int randInd = getRnd().nextInt(indices.size());
             dirInd = indices.get(randInd);
         } else dirInd = maxIndex(coinage);
 
@@ -32,7 +32,7 @@ public class Stateless extends Drone {
 
     //moves in chosen direction
     private void goHere() {
-        int d = bestGain(potentialGain(map.stations));
+        int d = bestGain(potentialGain(getMap().getStations()));
         movement(Direction.values()[d]);
     }
 
@@ -41,13 +41,13 @@ public class Stateless extends Drone {
     void callStrategy() {
 
         do {
-            System.out.println("\n MOVE: " + (250 - this.moves) + " POWER: " + this.power + " COINS: " + this.coins);
+            System.out.println("\n MOVE: " + (250 - this.getMoves()) + " POWER: " + this.getPower() + " COINS: " + this.getCoins());
             goHere();
 
-        } while (this.moves > 0 && this.power > 0);
+        } while (this.getMoves() > 0 && this.getPower() > 0);
 
-        System.out.println("\nDrone coins = " + this.coins);
-        System.out.println("Drone power = " + this.power);
+        System.out.println("\nDrone coins = " + this.getCoins());
+        System.out.println("Drone power = " + this.getPower());
     }
 
 
