@@ -41,7 +41,8 @@ public class Stateless extends Drone {
     void callStrategy() {
 
         do {
-            System.out.println("\n MOVE: " + (250 - this.getMoves()) + " POWER: " + this.getPower() + " COINS: " + this.getCoins());
+            System.out.println("\n MOVE: " + (250 - this.getMoves()) + " POWER: " + this.getPower() + " COINS: " +
+                    this.getCoins());
             goHere();
 
         } while (this.getMoves() > 0 && this.getPower() > 0);

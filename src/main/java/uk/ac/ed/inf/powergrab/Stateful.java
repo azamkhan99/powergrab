@@ -32,7 +32,7 @@ public class Stateful extends Drone {
     }
 
 
-    //Returns the station with the smallest distance to a position
+    //Returns the station with the smallest distance to a position from a list of station objects
     private Station closest(Position p, ArrayList<Station> ls) {
         if (ls.isEmpty()) return null;
         Station nearest = ls.get(0);
@@ -47,7 +47,8 @@ public class Stateful extends Drone {
 
     //Returns the direction to move towards
     private Direction getDirection(Station s) {
-        double in = Math.toDegrees(Math.atan2((s.getLocation().longitude - this.getCurrentPosition().longitude), (s.getLocation().latitude - this.getCurrentPosition().latitude)));
+        double in = Math.toDegrees(Math.atan2((s.getLocation().longitude - this.getCurrentPosition().longitude),
+                (s.getLocation().latitude - this.getCurrentPosition().latitude)));
         int rad = (int) Math.round(((in % 360) / 22.5)) % 16;
         if (rad < 0) {
             rad = rad + 16;
@@ -110,6 +111,7 @@ public class Stateful extends Drone {
 
     }
 
+    //Check to see if a move is similar to the one 20 moves ago
     private boolean inLoop() {
         if (listClosest.size() >= 20 && positiveStations.size() > 1)
             return (listClosest.get(listClosest.size() - 1).isEquals(listClosest.get(listClosest.size() - 20)));
@@ -158,17 +160,14 @@ public class Stateful extends Drone {
     void strategyCall() {
         double tc = getMap().totalCoins();
         do {
-            System.out.println("\n MOVE: " + (250 - this.getMoves()) + " POWER: " + this.getPower() + " COINS: " + this.getCoins());
+            System.out.println("\n MOVE: " + (250 - this.getMoves()) + " POWER: " + this.getPower() + " COINS: " +
+                    this.getCoins());
 
             strategy();
-
 
         } while (this.getMoves() > 0 && this.getPower() > 0);
         double percent = (this.getCoins() / tc * 100);
         System.out.println("\ntotal coins= " + tc + "\n" + "percent of coins collected: " + percent);
-
-        //System.out.println("\nDrone coins = " + this.coins);
-        //System.out.println("\nDrone power = " + this.power);
     }
 
 

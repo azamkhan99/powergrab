@@ -32,11 +32,14 @@ public class Station {
     }
 
 
+    //Return the information in a station object as a string
     public String toString() {
-        return "coins: " + this.coins + "power: " + this.power + "latitude: " + this.location.latitude + "longitude: " + this.location.longitude;
+        return "coins: " + this.coins + "power: " + this.power + "latitude: " + this.location.latitude + "longitude: "
+                + this.location.longitude;
     }
 
-    boolean isEquals(Station s) {
+    //Checks if two station objects being compared are equivalent
+    public boolean isEquals(Station s) {
         return this.coins == s.coins && this.power == s.power && this.location == s.location;
     }
 
